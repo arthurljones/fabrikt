@@ -47,7 +47,7 @@ sealed class KotlinTypeInfo(val modelKClass: KClass<*>, val generatedModelClassN
     object ByteArray : KotlinTypeInfo(kotlin.ByteArray::class)
     object InputStream : KotlinTypeInfo(java.io.InputStream::class)
     object Boolean : KotlinTypeInfo(kotlin.Boolean::class)
-    object UntypedObject : KotlinTypeInfo(Any::class)
+    data class UntypedObject(val klass: KClass<*> = Any::class) : KotlinTypeInfo(klass)
     object AnyType : KotlinTypeInfo(Any::class)
     data class Object(val simpleClassName: String) : KotlinTypeInfo(GeneratedType::class, simpleClassName)
     data class Array(
@@ -163,7 +163,9 @@ sealed class KotlinTypeInfo(val modelKClass: KClass<*>, val generatedModelClassN
                     SimpleTypedAdditionalProperties(from(schema, OasType.ADDITIONAL_PROPERTIES_VALUE))
 
                 OasType.UntypedObjectAdditionalProperties -> UntypedObjectAdditionalProperties
-                OasType.UntypedObject -> UntypedObject
+                OasType.UntypedObject -> {
+                    UntypedObject(MutableSettings.serializationLibrary.serializationAnnotations.untypedObjectType)
+                }
                 OasType.UnknownAdditionalProperties -> UnknownAdditionalProperties
                 OasType.TypedMapAdditionalProperties ->
                     MapTypeAdditionalProperties(

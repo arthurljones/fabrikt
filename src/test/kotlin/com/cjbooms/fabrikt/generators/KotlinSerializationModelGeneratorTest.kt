@@ -34,6 +34,7 @@ class KotlinSerializationModelGeneratorTest {
     private fun testCases(): Stream<String> = Stream.of(
         "discriminatedOneOf",
         "primitiveTypes",
+        "untypedObject",
     )
 
     @BeforeEach
@@ -98,20 +99,6 @@ class KotlinSerializationModelGeneratorTest {
             ModelGenerator(Packages(basePackage), sourceApi,).generate()
         }
         assertThat(e.message).isEqualTo("Additional properties not supported by selected serialization library")
-    }
-
-    @Test
-    fun `schemas without properties result in UnsupportedOperationException`() {
-        val basePackage = "examples.untypedObject"
-        val apiLocation = javaClass.getResource("/examples/untypedObject/api.yaml")!!
-        val sourceApi = SourceApi(apiLocation.readText(), baseDir = Paths.get(apiLocation.toURI()))
-
-        val e = assertThrows<UnsupportedOperationException> {
-            val models = ModelGenerator(Packages(basePackage), sourceApi,).generate()
-            val sourceSet = setOf(KotlinSourceSet(models.files, Paths.get("")))
-            println(sourceSet)
-        }
-        assertThat(e.message).isEqualTo("Untyped objects not supported by selected serialization library (data: {\"type\":\"object\",\"description\":\"Any data. Object has no schema.\"})")
     }
 
     @Test

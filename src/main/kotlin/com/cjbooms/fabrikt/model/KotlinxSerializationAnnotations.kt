@@ -1,16 +1,12 @@
 package com.cjbooms.fabrikt.model
 
-import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.PropertySpec
-import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.*
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonClassDiscriminator
+import kotlinx.serialization.json.JsonObject
 
 object KotlinxSerializationAnnotations : SerializationAnnotations {
     private const val DEFAULT_JSON_CLASS_DISCRIMINATOR = "type"
@@ -21,6 +17,12 @@ object KotlinxSerializationAnnotations : SerializationAnnotations {
      * will conflict with the class discriminator name.
      */
     override val supportsBackingPropertyForDiscriminator = false
+
+    /**
+     * Rather than `Any`, kotlinx serialization requires its own `JsonObject`
+     * to parse a json object with unspecified structure.
+     */
+    override val untypedObjectType = JsonObject::class
 
     /**
      * Supporting "additionalProperties: true" for kotlinx serialization requires additional

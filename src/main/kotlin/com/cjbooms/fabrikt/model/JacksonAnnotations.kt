@@ -13,6 +13,7 @@ import com.squareup.kotlinpoet.TypeSpec
 object JacksonAnnotations : SerializationAnnotations {
     override val supportsBackingPropertyForDiscriminator = true
     override val supportsAdditionalProperties = true
+    override val untypedObjectType = Any::class
     override fun addIgnore(propertySpecBuilder: PropertySpec.Builder) =
         propertySpecBuilder.addAnnotation(JacksonMetadata.ignore)
 

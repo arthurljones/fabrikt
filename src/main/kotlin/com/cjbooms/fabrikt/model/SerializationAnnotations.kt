@@ -4,6 +4,8 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
+import kotlinx.serialization.json.JsonElement
+import kotlin.reflect.KClass
 
 sealed interface SerializationAnnotations {
     /**
@@ -16,6 +18,11 @@ sealed interface SerializationAnnotations {
      * https://spec.openapis.org/oas/v3.0.0.html#model-with-map-dictionary-properties
      */
     val supportsAdditionalProperties: Boolean
+
+    /**
+     * Map value type when parsing untyped objects (without additional properties)
+     */
+    val untypedObjectType: KClass<*>
 
     fun addIgnore(propertySpecBuilder: PropertySpec.Builder): PropertySpec.Builder
     fun addGetter(funSpecBuilder: FunSpec.Builder): FunSpec.Builder
